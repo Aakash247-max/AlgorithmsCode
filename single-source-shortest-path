@@ -1,0 +1,46 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define v 7
+#define inf INT_MAX
+void shortest_path(int graph[v][v],vector<int> &dist,queue<int> &nodes,int s){
+         if(nodes.empty()){
+             return;
+         }
+         int node = nodes.front();
+         nodes.pop();
+         for(int i=0;i<v;i++){
+             if(dist[node]!=inf && dist[i]>dist[node]+graph[node][i] && graph[node][i]!=inf){
+                 dist[i] = dist[node]+ graph[node][i];
+                 nodes.push(i);
+             }
+         }
+         shortest_path(graph,dist,nodes,node);
+}
+int main(){
+    int graph[v][v]={
+        {0,6,5,5,inf,inf,inf},
+        {inf,0,inf,inf,-1,inf,inf},
+        {inf,-2,0,inf,1,inf,inf},
+        {inf,inf,-2,0,inf,-1,inf},
+        {inf,inf,inf,inf,0,inf,3},
+        {inf,inf,inf,inf,inf,0,3},
+        {inf,inf,inf,inf,inf,inf,0}
+    };
+    int s;
+    cout<<"Enter the source node: ";
+    cin>>s;
+    vector<int> dist(v,inf);
+    dist[s] = 0;
+    queue<int> nodes;
+    nodes.push(s);
+    shortest_path(graph,dist,nodes,s);
+    for(int i=0;i<v;i++){
+        if(dist[i]==inf){
+        cout<<"INF ";
+        }
+        else{
+            cout<<dist[i]<<" ";
+        }
+    }
+    return 0;
+}
