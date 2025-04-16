@@ -1,0 +1,44 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define V 4
+#define inf INT_MAX
+vector<int>TSP(int graph[V][V],set<int> rem_node, int s,vector<int> cost)
+{
+    int dist=inf;
+    int indx;
+    rem_node.erase(s);
+    if(rem_node.size()==0){
+    	return cost;
+	}
+    for(auto &x: rem_node){
+    	if(graph[s][x]<dist){
+    		dist = graph[s][x];
+    		indx = x;
+		}
+	}
+	cost[0]+=dist;
+	cost[1]=indx;
+    TSP(graph,rem_node,indx,cost);
+}
+int main()
+{
+    int graph[V][V] = { { 0, 10, 15, 20 },
+                       { inf, 0, 35, 25 },
+                       { 15, 35, 0, 30 },
+                       { 20, 25, 30, 0 } };
+    int s = 0;
+    set<int> nodes;
+    for(int i=0;i<graph.size;i++){
+        nodes.push_back(i);
+    }
+    vector<int> cost ={0,s};
+    if(graph[s][TSP(graph,nodes,s,cost)[0]]==inf){
+    	cout<<"Path is not found.";
+	}
+	else{
+		for(int i=0;i<2;i++){
+			cout<<TSP(graph,nodes,s,cost)[i]<<" ";
+		}
+	}
+    return 0;
+}
