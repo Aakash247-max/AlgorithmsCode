@@ -1,44 +1,57 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
-#define V 4
+#define v 5
 #define inf INT_MAX
-vector<int>TSP(int graph[V][V],set<int> rem_node, int s,vector<int> cost)
-{
-    int dist=inf;
-    int indx;
-    rem_node.erase(s);
-    if(rem_node.size()==0){
-    	return cost;
-	}
-    for(auto &x: rem_node){
-    	if(graph[s][x]<dist){
-    		dist = graph[s][x];
-    		indx = x;
-		}
-	}
-	cost[0]+=dist;
-	cost[1]=indx;
-    TSP(graph,rem_node,indx,cost);
-}
-int main()
-{
-    int graph[V][V] = { { 0, 10, 15, 20 },
-                       { inf, 0, 35, 25 },
-                       { 15, 35, 0, 30 },
-                       { 20, 25, 30, 0 } };
-    int s = 0;
-    set<int> nodes;
-    for(int i=0;i<graph.size;i++){
-        nodes.push_back(i);
+void TSP(int graph[v][v],set<int> &rem_nodes,int s,int cost,vector<int> &path){
+    rem_nodes.erase(s);
+    int dist = inf;
+    int indx =-1;
+    if(rem_nodes.empty()){
+        if(graph[s][0]==inf){
+            cout<<"No path to the starting node.";
+            return;
+        }
+        else{
+        cost+= graph[s][0];
+        path.push_back(path[0]);
+        cout<<cost<<endl;
+        for(int i=0;i<path.size();i++){
+            cout<<path[i]<<" ";
+        }
+        }
+        return;
     }
-    vector<int> cost ={0,s};
-    if(graph[s][TSP(graph,nodes,s,cost)[0]]==inf){
-    	cout<<"Path is not found.";
-	}
-	else{
-		for(int i=0;i<2;i++){
-			cout<<TSP(graph,nodes,s,cost)[i]<<" ";
-		}
-	}
-    return 0;
+    for(auto &x: rem_nodes){
+        if(dist>graph[s][x]){
+            dist = graph[s][x];
+            indx=x;
+        }
+    }
+    if(indx==-1|| dist ==inf){
+        cout<<"No valid path found!";
+        return;
+    }
+    path.push_back(indx);
+    cost +=dist;
+    TSP(graph,rem_nodes,indx,cost,path);
+
+}
+int main(){
+        int graph[v][v]={
+            {0,15,inf,6,7},
+            {2,0,8,5,3},
+            {2,9,0,10,4},
+            {9,15,13,0,1},
+            {inf,8,4,9,0}
+        };
+        int s = 1;
+        int cost=0;
+        set<int>nodes;
+        vector<int> path;
+        path.push_back(s);
+        for(int i=0;i<v;i++){
+            nodes.insert(i);
+        }
+        TSP(graph,nodes,s,cost,path);
+        return 0;
 }
